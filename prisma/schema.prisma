@@ -59,7 +59,7 @@ model Dispo {
   doctor   Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
   timeslot    String
   isReserved  Boolean   @default(false)
-  date        DateTime
+  date        DateTime  @default(now())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   rdv         RDV[]
@@ -84,3 +84,4 @@ model RDV {
   doctorId Int
   doctor   Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
 }
+
