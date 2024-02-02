@@ -19,7 +19,7 @@ model Patient {
   firstname    String
   lastname     String
   age          Int
-  Reservations Reservations[]
+  Rdv  Rdv[]
   history      History[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -41,8 +41,7 @@ model Doctor {
   specialiteId Int
   specialite   Specialite     @relation(fields: [specialiteId], references: [specialiteId])
   dispo        Dispo[]
-  Reservations Reservations[]
-  rdv          RDV[]
+  rdv Rdv[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 }
@@ -62,26 +61,22 @@ model Dispo {
   date        DateTime  @default(now())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  rdv         RDV[]
+  Rdv        Rdv[]
 }
 
-model Reservations {
-  reservationsId Int       @id @default(autoincrement())
+model Rdv {
+  rdvId Int       @id @default(autoincrement())
   patientID      Int
   patient        Patient   @relation(fields: [patientID], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
   doctorId    Int
   doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
+  dispoId    Int
+  dispo      Dispo @relation(fields: [dispoId], references: [dispoId], onDelete: Cascade, onUpdate: Cascade)
   motif          String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime  @default(now())
 }
 
-model RDV {
-  rdvId       Int       @id @default(autoincrement())
-  dispoID     Int
-  dispo       Dispo     @relation(fields: [dispoID], references: [dispoId], onDelete: Cascade, onUpdate: Cascade)
-  doctorId Int
-  doctor   Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
-}
+
 

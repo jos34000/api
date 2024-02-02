@@ -31,6 +31,7 @@ export default async function handler(req, res) {
           },
         },
         select: {
+          dispoId: true,
           timeslot: true,
         },
       })
