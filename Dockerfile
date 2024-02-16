@@ -1,4 +1,4 @@
-FROM node:21-alpine
+FROM --platform=linux/amd64 node:21-alpine
 WORKDIR /api
 COPY package*.json ./
 RUN npm install
