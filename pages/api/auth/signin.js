@@ -3,7 +3,7 @@ const prisma = new PrismaClient()
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { email, password, name, surname } = req.body
+    const { email, password, nom, prenom } = req.body
 
     try {
       const patient = await prisma.patient.create({
