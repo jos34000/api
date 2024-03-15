@@ -1,7 +1,14 @@
+import NextCors from "nextjs-cors"
+import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export default async function handler(req, res) {
+  await NextCors(req, res, {
+    origin: "*",
+    methods: ["POST"],
+  })
+
   if (req.method === "POST") {
     const { email, password } = req.body
 
@@ -17,8 +24,11 @@ export default async function handler(req, res) {
           .status(401)
           .json({ success: false, error: "Invalid credentials" })
       }
+      const token = jwt.sign({ id: user.id }, "your-secret-key", {
+        expiresIn: "1h",
+      })
 
-      return res.status(200).json({ success: true })
+      return res.status(200).json({ success: true, token })
     } catch (error) {
       return res.status(500).json({ success: false, error: error.message })
     }
