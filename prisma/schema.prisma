@@ -20,16 +20,24 @@ model Patient {
   lastname     String
   age          Int
   Rdv  Rdv[]
-  history      History[]
+  patienthistory      PatientHistory[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 }
 
 model History {
   historyId  Int     @id @default(autoincrement())
+  antecedent String
+  patienthistory PatientHistory[]
+}
+
+model PatientHistory {
+  patienthistoryId    Int     @id @default(autoincrement())
   patientId  Int
   patient    Patient @relation(fields: [patientId], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
-  antecedent String
+  historyId  Int
+  history    History @relation(fields: [historyId], references: [historyId], onDelete: Cascade, onUpdate: Cascade)
+
 }
 
 model Doctor {
@@ -48,7 +56,7 @@ model Doctor {
 
 model Specialite {
   specialiteId Int         @id @default(autoincrement())
-  name         String
+  specialite         String @unique
   doctor   Doctor[]
 }
 
