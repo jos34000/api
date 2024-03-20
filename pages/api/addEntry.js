@@ -4,6 +4,7 @@ const prisma = new PrismaClient()
 
 export default async (req, res) => {
   const antecedents = [
+    "Aucun",
     "Diabète",
     "Hypertension artérielle",
     "Maladie cardiaque",
@@ -53,6 +54,14 @@ export default async (req, res) => {
     })
   }
 
+  for (let i = 0; i < antecedents.length; i++) {
+    await prisma.history.create({
+      data: {
+        antecedent: antecedents[i],
+      },
+    })
+  }
+
   for (let i = 0; i < specialites.length; i++) {
     await prisma.specialite.create({
       data: {
@@ -61,13 +70,40 @@ export default async (req, res) => {
     })
   }
 
-  for (let i = 0; i < antecedents.length; i++) {
-    await prisma.specialite.create({
-      data: {
-        specialite: specialites[i],
+  for (let i = 0; i < 10; i++) {
+    const firstEntry = await prisma.specialite.findFirst({
+      orderBy: {
+        id: "asc",
       },
     })
-  }
+    const firstId = firstEntry.id
 
-  res.status(200).json({ message: "Données générées et insérées avec succès" })
+    const lastEntry = await prisma.specialite.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    })
+    const lastId = lastEntry.id
+
+    const lastname = faker.person.lastName()
+    const firstname = faker.person.firstName()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    const specialite = faker.helpers.arrayElement(specialites)
+    const specialiteId = faker.number.int({ min: firstId, max: lastId })
+
+    await prisma.doctor.create({
+      data: {
+        lastname: lastname,
+        firstname: firstname,
+        email: email,
+        password: password,
+        specialiteId: specialiteId,
+      },
+    })
+
+    res
+      .status(200)
+      .json({ message: "Données générées et insérées avec succès" })
+  }
 }

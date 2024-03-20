@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,25 +17,20 @@ model Patient {
   lastname     String
   age          Int
   Rdv  Rdv[]
-  patienthistory      PatientHistory[]
+  history      History[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 }
 
 model History {
   historyId  Int     @id @default(autoincrement())
-  antecedent String
-  patienthistory PatientHistory[]
-}
+  antecedent String @unique
+  diagnosticDate DateTime @default(now())
+  commentaires    String?
+  patientId    Int?
+  patient      Patient? @relation(fields: [patientId], references: [patientId])
+  }
 
-model PatientHistory {
-  patienthistoryId    Int     @id @default(autoincrement())
-  patientId  Int
-  patient    Patient @relation(fields: [patientId], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
-  historyId  Int
-  history    History @relation(fields: [historyId], references: [historyId], onDelete: Cascade, onUpdate: Cascade)
-
-}
 
 model Doctor {
   doctorId       Int            @id @default(autoincrement())
