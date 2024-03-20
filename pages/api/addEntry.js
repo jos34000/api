@@ -36,7 +36,7 @@ export default async (req, res) => {
     "Ophtalmologue",
   ]
 
-  for (let i = 0; i < 10; i++) {
+  /* for (let i = 0; i < 10; i++) {
     const lastname = faker.person.lastName()
     const firstname = faker.person.firstName()
     const email = faker.internet.email()
@@ -52,38 +52,38 @@ export default async (req, res) => {
         age: age,
       },
     })
-  }
+  } */
 
-  for (let i = 0; i < antecedents.length; i++) {
+  /*   for (let i = 0; i < antecedents.length; i++) {
     await prisma.history.create({
       data: {
         antecedent: antecedents[i],
       },
     })
-  }
+  } */
 
-  for (let i = 0; i < specialites.length; i++) {
+  /*  for (let i = 0; i < specialites.length; i++) {
     await prisma.specialite.create({
       data: {
         specialite: specialites[i],
       },
     })
-  }
+  } */
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     const firstEntry = await prisma.specialite.findFirst({
       orderBy: {
-        id: "asc",
+        specialiteId: "asc",
       },
     })
-    const firstId = firstEntry.id
+    const firstId = firstEntry.specialiteId
 
     const lastEntry = await prisma.specialite.findFirst({
       orderBy: {
-        id: "desc",
+        specialiteId: "desc",
       },
     })
-    const lastId = lastEntry.id
+    const lastId = lastEntry.specialiteId
 
     const lastname = faker.person.lastName()
     const firstname = faker.person.firstName()
