@@ -13,19 +13,28 @@ export default async function handler(req, res) {
     const { email, password } = req.body
 
     try {
-      const user = await prisma.patient.findUnique({
+      const patient = await prisma.patient.findUnique({
         where: {
           email,
         },
       })
 
-      if (!user || user.password !== password) {
+      if (!patient || patient.password !== password) {
         return res
           .status(401)
           .json({ success: false, error: "Invalid credentials" })
       }
-      const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY, {
+      const token = jwt.sign({ id: patient.patientId }, process.env.TOKEN_KEY, {
         expiresIn: "1h",
+      })
+      const patientId = patient.patientId
+      await prisma.patient.update({
+        where: {
+          patientId: patientId,
+        },
+        data: {
+          token: token,
+        },
       })
 
       return res.status(200).json({ success: true, token })
