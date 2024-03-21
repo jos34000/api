@@ -24,7 +24,7 @@ export default async function handler(req, res) {
           .status(401)
           .json({ success: false, error: "Invalid credentials" })
       }
-      const token = jwt.sign({ id: user.id }, "your-secret-key", {
+      const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY, {
         expiresIn: "1h",
       })
 

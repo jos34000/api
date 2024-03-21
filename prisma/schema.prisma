@@ -20,6 +20,8 @@ model Patient {
   history      History[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  token        String?         @unique
+
 }
 
 model History {
@@ -44,6 +46,7 @@ model Doctor {
   rdv Rdv[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  token        String?         @unique
 }
 
 model Specialite {
