@@ -11,8 +11,7 @@
     "studio": "prisma studio --browser none",
     "migrate": "prisma migrate dev --name new-migration",
     "prisma": "prisma generate && prisma migrate dev --name new-migration && prisma studio --browser none",
-    "try": "concurrently \"npm run dev\" \"npm run prisma\""
-
+    "all": "concurrently \"npm run dev\" \"npm run prisma\""
   },
   "dependencies": {
     "date-fns": "^3.3.1",

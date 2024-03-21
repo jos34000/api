@@ -106,7 +106,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 10; i++) {
     const firstEntry = await prisma.specialite.findFirst({
       orderBy: {
         specialiteId: "asc",
@@ -144,7 +144,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 10; i++) {
     const firstEntry = await prisma.doctor.findFirst({
       orderBy: {
         doctorId: "asc",
@@ -174,6 +174,78 @@ export default async (req, res) => {
       fs.appendFileSync(
         "error.log",
         `Erreur lors de la création des disponibilités :\n\n${error}\n====================\n\n`
+      )
+    }
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const firstPatient = await prisma.patient.findFirst({
+      orderBy: {
+        patientId: "asc",
+      },
+    })
+    const patientFirst = firstPatient.patientId
+
+    const lastPatient = await prisma.patient.findFirst({
+      orderBy: {
+        patientId: "desc",
+      },
+    })
+    const patientLast = lastPatient.patientId
+
+    const firstDoctor = await prisma.doctor.findFirst({
+      orderBy: {
+        doctorId: "asc",
+      },
+    })
+    const doctorFirst = firstDoctor.doctorId
+
+    const lastDoctor = await prisma.doctor.findFirst({
+      orderBy: {
+        doctorId: "desc",
+      },
+    })
+    const doctorLast = lastDoctor.doctorId
+
+    const patientId = faker.number.int({ min: patientFirst, max: patientLast })
+    let doctorId = faker.number.int({ min: doctorFirst, max: doctorLast })
+    let disposId = []
+    while (disposId.length === 0) {
+      doctorId = faker.number.int({ min: doctorFirst, max: doctorLast })
+      disposId = await prisma.dispo.findMany({
+        where: {
+          doctorId: doctorId,
+        },
+      })
+    }
+    const response = faker.helpers.arrayElement(disposId)
+    const dispoId = response.dispoId
+
+    try {
+      await prisma.rdv.create({
+        data: {
+          motif: "test",
+          patient: {
+            connect: {
+              patientId: patientId,
+            },
+          },
+          doctor: {
+            connect: {
+              doctorId: doctorId,
+            },
+          },
+          dispo: {
+            connect: {
+              dispoId: dispoId,
+            },
+          },
+        },
+      })
+    } catch (error) {
+      fs.appendFileSync(
+        "error.log",
+        `Erreur lors de la création d'un RDV :\n\n${error}\n====================\n\n`
       )
     }
   }
