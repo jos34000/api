@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 import { faker } from "@faker-js/faker"
 import fs from "fs"
-const prisma = new PrismaClient()
 
 export default async (req, res) => {
   const antecedents = [
