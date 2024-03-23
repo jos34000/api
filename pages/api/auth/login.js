@@ -1,7 +1,7 @@
-import NextCors from "nextjs-cors"
-import jwt from "jsonwebtoken"
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+import NextCors from "nextjs-cors"
+import jwt from "jsonwebtoken"
 
 export default async function handler(req, res) {
   await NextCors(req, res, {
