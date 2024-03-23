@@ -11,13 +11,28 @@ export default async (req, res) => {
   const oldMdp = req.body.oldMdp
   const newMdp = req.body.newMdp
 
-  await prisma.patient.update({
+  const oldMdpBdd = await prisma.patient.findUnique({
     where: {
       token: cookie,
     },
-    data: {
-      password: newMdp,
+    select: {
+      password: true,
     },
   })
-  return res.status(200).json({ success: true })
+
+  if (oldMdp !== oldMdpBdd.password) {
+    res.status(500).json({ message: "L'ancien mdp ne correspond pas" })
+  } else {
+    await prisma.patient.update({
+      where: {
+        token: cookie,
+      },
+      data: {
+        password: newMdp,
+      },
+    })
+    return res
+      .status(200)
+      .json({ success: true, message: "Mot de passe modifié" })
+  }
 }
