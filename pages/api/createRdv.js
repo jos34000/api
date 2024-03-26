@@ -1,20 +1,34 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
-import React from "react"
+import NextCors from "nextjs-cors"
 
 export default async function createRdv(req, res) {
-  const { patientId, doctorId, dispoId } = req.body
-  const patient = Number(patientId)
+  await NextCors(req, res, {
+    origin: "*",
+    methods: ["POST"],
+  })
+  console.log(req.body)
+
+  const { token, doctorId, dispoId, motif } = req.body
   const doctor = Number(doctorId)
   const dispo = Number(dispoId)
+  const patient = await prisma.patient.findUnique({
+    where: {
+      token: token,
+    },
+    select: {
+      patientId: true,
+    },
+  })
+  const patientId = patient.patientId
+  console.log(patientId)
 
   try {
-    // Créer le rendez-vous
     const rdv = await prisma.rdv.create({
       data: {
         patient: {
           connect: {
-            patientId: patient,
+            patientId: patientId,
           },
         },
         doctor: {
@@ -27,9 +41,10 @@ export default async function createRdv(req, res) {
             dispoId: dispo,
           },
         },
-        motif: "test",
+        motif: motif,
       },
     })
+    console.log(rdv)
 
     // Mettre à jour le champ isReserved de la dispo associée à true
     await prisma.dispo.update({
