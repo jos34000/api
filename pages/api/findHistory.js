@@ -1,23 +1,42 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+import NextCors from "nextjs-cors"
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*")
+  await NextCors(req, res, {
+    origin: "*",
+    methods: ["POST"],
+  })
+  if (req.method === "POST") {
+    const token = req.body.token
 
-  if (req.method === "GET") {
+    let patientId = await prisma.patient.findUnique({
+      where: {
+        token: token,
+      },
+      select: {
+        patientId: true,
+      },
+    })
+
     try {
-      const history = await prisma.history.findMany({
-        select: {
-          historyId: true,
-          antecedent: true,
+      const patienthistory = await prisma.patienthistory.findMany({
+        where: {
+          patientId: patientId.patientId,
+        },
+        include: {
+          history: true,
         },
         orderBy: {
           historyId: "asc",
         },
       })
-      res.status(200).json(history)
-    } catch (e) {
-      res.status(405).json({ message: "Méthode non autorisée" })
+      res.status(200).send(patienthistory)
+      console.log("ok")
+    } catch (error) {
+      console.log(error)
+
+      res.status(500).json({ error: error })
     }
   }
 }

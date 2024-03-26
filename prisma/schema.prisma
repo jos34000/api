@@ -10,76 +10,78 @@ datasource db {
 // Models of tables
 
 model Patient {
-  patientId    Int            @id @default(autoincrement())
-  email        String         @unique
-  password     String
-  firstname    String
-  lastname     String
-  age          Int
-  Rdv  Rdv[]
-  history      History[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  token        String?         @unique
+  patientId      Int              @id @default(autoincrement())
+  email          String           @unique
+  password       String
+  firstname      String
+  lastname       String
+  age            Int
+  Rdv            Rdv[]
+  Patienthistory Patienthistory[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  token          String?          @unique
+}
 
+model Patienthistory {
+  patienthistoryId Int      @id @default(autoincrement())
+  diagnosticDate   DateTime @default(now())
+  commentaires     String?
+  patient          Patient?  @relation(fields: [patientId], references: [patientId])
+  patientId Int?
+  history          History? @relation(fields: [historyId], references: [historyId])
+  historyId Int?
 }
 
 model History {
-  historyId  Int     @id @default(autoincrement())
+  historyId  Int    @id @default(autoincrement())
   antecedent String @unique
-  diagnosticDate DateTime @default(now())
-  commentaires    String?
-  patientId    Int?
-  patient      Patient? @relation(fields: [patientId], references: [patientId])
-  }
-
+  patienthistory Patienthistory[]
+}
 
 model Doctor {
-  doctorId       Int            @id @default(autoincrement())
-  email        String         @unique
+  doctorId     Int        @id @default(autoincrement())
+  email        String     @unique
   password     String
   firstname    String
   lastname     String
   specialiteId Int
-  specialite   Specialite     @relation(fields: [specialiteId], references: [specialiteId])
+  specialite   Specialite @relation(fields: [specialiteId], references: [specialiteId])
   dispo        Dispo[]
-  rdv Rdv[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  token        String?         @unique
+  rdv          Rdv[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  token        String?    @unique
 }
 
 model Specialite {
-  specialiteId Int         @id @default(autoincrement())
-  specialite         String @unique
-  doctor   Doctor[]
+  specialiteId Int      @id @default(autoincrement())
+  specialite   String   @unique
+  doctor       Doctor[]
 }
 
 model Dispo {
-  dispoId     Int       @id @default(autoincrement())
+  dispoId    Int      @id @default(autoincrement())
   doctorId   Int
-  doctor   Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
-  timeslot    String
-  isReserved  Boolean   @default(false)
-  date        DateTime  @default(now())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  doctor     Doctor   @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
+  timeslot   String
+  isReserved Boolean  @default(false)
+  date       DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   Rdv        Rdv[]
 }
 
 model Rdv {
-  rdvId Int       @id @default(autoincrement())
-  patientID      Int
-  patient        Patient   @relation(fields: [patientID], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
-  doctorId    Int
-  doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
-  dispoId    Int
-  dispo      Dispo @relation(fields: [dispoId], references: [dispoId], onDelete: Cascade, onUpdate: Cascade)
-  motif          String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime  @default(now())
+  rdvId     Int      @id @default(autoincrement())
+  patientID Int
+  patient   Patient  @relation(fields: [patientID], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
+  doctorId  Int
+  doctor    Doctor   @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
+  dispoId   Int
+  dispo     Dispo    @relation(fields: [dispoId], references: [dispoId], onDelete: Cascade, onUpdate: Cascade)
+  motif     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime @default(now())
 }
-
-
-
