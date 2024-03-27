@@ -17,10 +17,9 @@ export default async function createPatientHistory(req, res) {
       patientId: true,
     },
   })
-  console.log(patient)
 
   const patientId = patient.patientId
-  console.log(patientId)
+  const isoDate = new Date(date).toISOString()
 
   try {
     const history = await prisma.patienthistory.create({
@@ -35,11 +34,11 @@ export default async function createPatientHistory(req, res) {
             historyId: parseInt(historyId),
           },
         },
-        diagnosticDate: date,
+        diagnosticDate: isoDate,
         commentaires: comment,
       },
     })
-    res.status(200).json({ history })
+    res.status(200).send(history)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

@@ -7,36 +7,19 @@ export default async function handler(req, res) {
     origin: "*",
     methods: ["POST"],
   })
-  if (req.method === "POST") {
-    const token = req.body.token
-
-    let patientId = await prisma.patient.findUnique({
-      where: {
-        token: token,
-      },
-      select: {
-        patientId: true,
-      },
-    })
-
+  if (req.method === "GET") {
     try {
-      const patienthistory = await prisma.patienthistory.findMany({
-        where: {
-          patientId: patientId.patientId,
-        },
-        include: {
-          history: true,
-        },
-        orderBy: {
-          historyId: "asc",
+      let histories = await prisma.history.findMany({
+        select: {
+          historyId: true,
+          antecedent: true,
         },
       })
-      res.status(200).send(patienthistory)
-      console.log("ok")
+      res.status(200).send(histories)
     } catch (error) {
-      console.log(error)
-
       res.status(500).json({ error: error })
+
+      console.log(error)
     }
   }
 }
