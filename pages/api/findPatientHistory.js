@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import NextCors from "nextjs-cors"
+import logError from "@/logs/logError.js"
+
 
 export default async function handler(req, res) {
   await NextCors(req, res, {

@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import { faker } from "@faker-js/faker"
+import logError from "@/logs/logError.js"
+
 
 export default async (req, res) => {
   let disposId = []

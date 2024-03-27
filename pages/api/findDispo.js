@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import { parse, startOfDay, endOfDay } from "date-fns"
 const prisma = new PrismaClient()
+import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*")
@@ -9,6 +10,7 @@ export default async function handler(req, res) {
     const { doctor, date } = req.query
     let doctorId = Number(doctor)
     if (!date) {
+      logError("read", "findDispo.js", "isDate", "Pas de date entrée")
       res.status(400).json({ message: "La date est requise" })
       return
     }
@@ -36,10 +38,10 @@ export default async function handler(req, res) {
         },
       })
 
-      res.json(dispos)
+      res.status(200).json(dispos)
     } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: "Internal Server Error" })
+      logError("read", "findDispo.js", "searchDispos", error)
+      res.status(500).json({ message: "Une erreur est survenue" })
     }
   }
 }

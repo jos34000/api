@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import NextCors from "nextjs-cors"
 import jwt from "jsonwebtoken"
+import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
   await NextCors(req, res, {
@@ -20,9 +21,8 @@ export default async function handler(req, res) {
       })
 
       if (!patient || patient.password !== password) {
-        return res
-          .status(401)
-          .json({ success: false, error: "Invalid credentials" })
+        logError("read", "login.js", "LOGIN", res.message)
+        return res.status(401).json({ success: false })
       }
       const token = jwt.sign({ id: patient.patientId }, process.env.TOKEN_KEY, {
         expiresIn: "1h",
@@ -39,9 +39,11 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ success: true, token })
     } catch (error) {
-      return res.status(500).json({ success: false, error: error.message })
+      logError("read", "login.js", "LOGIN", error)
+      return res.status(500).json({ success: false })
     }
   } else {
-    res.status(405).json({ success: false, error: "Method not allowed" })
+    logError("read", "login.js", "LOGIN", "Méthode de requête non valide")
+    res.status(405).json({ success: false })
   }
 }

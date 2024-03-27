@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+import logError from "@/logs/logError.js"
 import NextCors from "nextjs-cors"
 
 export default async function createPatientHistory(req, res) {
@@ -40,6 +41,7 @@ export default async function createPatientHistory(req, res) {
     })
     res.status(200).send(history)
   } catch (error) {
+    logError("create", "createPatientHistory.js", "createPatientHistory", error)
     res.status(500).json({ error: error.message })
   }
 }

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+import logError from "@/logs/logError.js"
 import { faker } from "@faker-js/faker"
 import fs from "fs"
 
@@ -69,10 +70,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création du patient :\n\n${error}\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createPatient", error)
     }
   }
 
@@ -84,10 +82,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création de l'antécédent :\n\n${error}\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createAntecedents", error)
     }
   }
 
@@ -99,10 +94,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création des spécialités :\n\n${error}\n\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createSpecialites", error)
     }
   }
 
@@ -137,10 +129,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création des docteurs :\n\n${error}\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createDoctor", error)
     }
   }
 
@@ -171,10 +160,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création des disponibilités :\n\n${error}\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createDispo", error)
     }
   }
 
@@ -243,10 +229,7 @@ export default async (req, res) => {
         },
       })
     } catch (error) {
-      fs.appendFileSync(
-        "error.log",
-        `Erreur lors de la création d'un RDV :\n\n${error}\n====================\n\n`
-      )
+      logError("create", "addEntry.js", "createRDV", error)
     }
   }
 
