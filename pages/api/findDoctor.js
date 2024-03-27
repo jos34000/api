@@ -18,10 +18,16 @@ export default async function handler(req, res) {
         res.status(200).json(doctors)
       } catch (error) {
         logError("read", "findDoctor.js", "searchDoctor", error)
+        return res.status(500).json({ error: "Une erreur est survenue" })
       }
     }
   } else {
-    logError("read", "findDoctor.js", "searchDoctor", "Méthode non autorisée")
-    res.status(405).json({ message: "Méthode non autorisée" })
+    logError(
+      "read",
+      "findDoctor.js",
+      "searchDoctor",
+      "Méthode non autorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

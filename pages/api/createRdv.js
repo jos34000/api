@@ -12,51 +12,61 @@ export default async function createRdv(req, res) {
   const { token, doctorId, dispoId, motif } = req.body
   const doctor = Number(doctorId)
   const dispo = Number(dispoId)
-  const patient = await prisma.patient.findUnique({
-    where: {
-      token: token,
-    },
-    select: {
-      patientId: true,
-    },
-  })
-  const patientId = patient.patientId
-
-  try {
-    const rdv = await prisma.rdv.create({
-      data: {
-        patient: {
-          connect: {
-            patientId: patientId,
-          },
-        },
-        doctor: {
-          connect: {
-            doctorId: doctor,
-          },
-        },
-        dispo: {
-          connect: {
-            dispoId: dispo,
-          },
-        },
-        motif: motif,
-      },
-    })
-
-    // Mettre à jour le champ isReserved de la dispo associée à true
-    await prisma.dispo.update({
+  if (req.method === "POST") {
+    const patient = await prisma.patient.findUnique({
       where: {
-        dispoId: dispo,
+        token: token,
       },
-      data: {
-        isReserved: true,
+      select: {
+        patientId: true,
       },
     })
+    const patientId = patient.patientId
 
-    res.status(200).json(rdv)
-  } catch (error) {
-    logError("create", "createRdv.js", "createRDV", error)
-    res.status(500).json({ error: "Une erreur est survenue" })
+    try {
+      const rdv = await prisma.rdv.create({
+        data: {
+          patient: {
+            connect: {
+              patientId: patientId,
+            },
+          },
+          doctor: {
+            connect: {
+              doctorId: doctor,
+            },
+          },
+          dispo: {
+            connect: {
+              dispoId: dispo,
+            },
+          },
+          motif: motif,
+        },
+      })
+
+      // Mettre à jour le champ isReserved de la dispo associée à true
+      await prisma.dispo.update({
+        where: {
+          dispoId: dispo,
+        },
+        data: {
+          isReserved: true,
+        },
+      })
+
+      res.status(200).json(rdv)
+    } catch (error) {
+      logError("create", "createRdv.js", "createRDV", error)
+      return res.status(500).json({ error: "Une erreur est survenue" })
+    }
+  } else {
+    logError(
+      "create",
+      "addEntry.js",
+      "createRDV",
+      "Métohde non autorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

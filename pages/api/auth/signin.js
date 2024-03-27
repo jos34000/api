@@ -16,19 +16,19 @@ export default async function handler(req, res) {
         },
       })
 
-      return res.status(200).json({ success: true, user })
+      return res.status(200).json({ success: true })
     } catch (error) {
       logError("create", "signin.js", "SignIn", error)
-      return res.status(500).json({ success: false, error: error.message })
+      return res.status(500).json({ success: false })
     }
   } else {
     logError(
       "create",
       "signin.js",
       "SignIn",
-      "Méthode de requête non autorisée"
+      "Méthode de requête non autorisée" + req.method
     )
 
-    res.status(405).json({ success: false, error: "Method not allowed" })
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

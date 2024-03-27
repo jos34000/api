@@ -12,6 +12,7 @@ export default async (req, res) => {
     await prisma.patient.deleteMany()
   } catch (error) {
     logError("delete", "eraseAll.js", "eraseEntries", error)
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
   res.status(200).json({ message: "Tables vidées" })
 }

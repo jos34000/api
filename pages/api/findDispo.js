@@ -41,7 +41,15 @@ export default async function handler(req, res) {
       res.status(200).json(dispos)
     } catch (error) {
       logError("read", "findDispo.js", "searchDispos", error)
-      res.status(500).json({ message: "Une erreur est survenue" })
+      return res.status(500).json({ error: "Une erreur est survenue" })
     }
+  } else {
+    logError(
+      "read",
+      "findDispo.js",
+      "searchDispos",
+      "Métohde non autorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

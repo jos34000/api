@@ -3,7 +3,6 @@ const prisma = new PrismaClient()
 import NextCors from "nextjs-cors"
 import logError from "@/logs/logError.js"
 
-
 export default async function handler(req, res) {
   await NextCors(req, res, {
     origin: "*",
@@ -19,9 +18,16 @@ export default async function handler(req, res) {
       })
       res.status(200).send(histories)
     } catch (error) {
-      res.status(500).json({ error: error })
-
-      console.log(error)
+      logError("read", "findHistory.js", "searchHistory", error)
+      res.status(500).json({ error: "Une erreur est survenue" })
     }
+  } else {
+    logError(
+      "read",
+      "findHistory.js",
+      "searchHistory",
+      "Méthode non autorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

@@ -3,7 +3,6 @@ const prisma = new PrismaClient()
 import NextCors from "nextjs-cors"
 import logError from "@/logs/logError.js"
 
-
 export default async function handler(req, res) {
   await NextCors(req, res, {
     origin: "*",
@@ -36,9 +35,16 @@ export default async function handler(req, res) {
       res.status(200).send(patienthistory)
       console.log("ok")
     } catch (error) {
-      console.log(error)
-
-      res.status(500).json({ error: error })
+      logError("read", "findPatientHistory.js", "searchPatientHistory", error)
+      res.status(500).json({ error: "Une erreur est survenue" })
     }
+  } else {
+    logError(
+      "read",
+      "findPatientHistory.js",
+      "searchPatientHistory",
+      "Méthode non authorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

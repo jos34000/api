@@ -21,27 +21,41 @@ export default async function createPatientHistory(req, res) {
 
   const patientId = patient.patientId
   const isoDate = new Date(date).toISOString()
-
-  try {
-    const history = await prisma.patienthistory.create({
-      data: {
-        patient: {
-          connect: {
-            patientId: patientId,
+  if (req.method === "POST") {
+    try {
+      const history = await prisma.patienthistory.create({
+        data: {
+          patient: {
+            connect: {
+              patientId: patientId,
+            },
           },
-        },
-        history: {
-          connect: {
-            historyId: parseInt(historyId),
+          history: {
+            connect: {
+              historyId: parseInt(historyId),
+            },
           },
+          diagnosticDate: isoDate,
+          commentaires: comment,
         },
-        diagnosticDate: isoDate,
-        commentaires: comment,
-      },
-    })
-    res.status(200).send(history)
-  } catch (error) {
-    logError("create", "createPatientHistory.js", "createPatientHistory", error)
-    res.status(500).json({ error: error.message })
+      })
+      res.status(200).send(history)
+    } catch (error) {
+      logError(
+        "create",
+        "createPatientHistory.js",
+        "createPatientHistory",
+        error
+      )
+      return res.status(500).json({ error: "Une erreur est survenue" })
+    }
+  } else {
+    logError(
+      "create",
+      "createPatientHistory.js",
+      "createPatientHistory",
+      "Méthode non autorisée : " + req.method
+    )
+    return res.status(400).json({ error: "Une erreur est survenue" })
   }
 }

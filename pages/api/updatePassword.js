@@ -22,8 +22,15 @@ export default async (req, res) => {
   })
 
   if (oldMdp !== oldMdpBdd.password) {
+    logError(
+      "update",
+      "updatePassword.js",
+      "testIfPasswordsSame",
+      "Les mdp ne sont pas identiques"
+    )
     res.status(500).json({ message: "L'ancien mdp ne correspond pas" })
-  } else {
+  }
+  try {
     await prisma.patient.update({
       where: {
         token: cookie,
@@ -32,8 +39,8 @@ export default async (req, res) => {
         password: newMdp,
       },
     })
-    return res
-      .status(200)
-      .json({ success: true, message: "Mot de passe modifié" })
+    return res.status(200).json({ success: true })
+  } catch (error) {
+    logError("update", "updatePassword.js", "updating-password", error)
   }
 }
