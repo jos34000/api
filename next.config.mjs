@@ -4,7 +4,7 @@ import { resolve } from "path"
 let envFile
 switch (process.env.NODE_ENV) {
   case "development":
-    envFile = ".env.dev"
+    envFile = ".env.development"
     break
   case "test":
     envFile = ".env.test"

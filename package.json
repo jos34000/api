@@ -10,7 +10,7 @@
     "format": "prisma format",
     "studio": "prisma studio --browser none",
     "migrate": "prisma migrate dev --name new-migration",
-    "prisma": "prisma generate && prisma migrate dev --name new-migration && prisma studio --browser none",
+    "prisma": "dotenv -e .env.$NODE_ENV prisma generate && dotenv -e .env.$NODE_ENV prisma migrate dev --name new-migration && dotenv -e .env.$NODE_ENV prisma studio --browser none",
     "all": "concurrently \"npm run dev\" \"npm run prisma\""
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "babel-jest": "^29.7.0",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "7.4.1",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
     "jest": "^29.7.0",
