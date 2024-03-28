@@ -1,6 +1,6 @@
 node_modules
 /prisma/migrations
-.env
+.env.*
 .git
 /logs/*
 !/logs/logError.js
