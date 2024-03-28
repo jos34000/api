@@ -3,11 +3,11 @@ import { resolve } from "path"
 
 let envFile
 switch (process.env.NODE_ENV) {
-  case "dev":
+  case "development":
     envFile = ".env.dev"
     break
-  case "home":
-    envFile = ".env.home"
+  case "test":
+    envFile = ".env.test"
     break
   default:
     envFile = ".env.prod"
