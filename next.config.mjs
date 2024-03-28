@@ -10,7 +10,7 @@ switch (process.env.NODE_ENV) {
     envFile = ".env.test"
     break
   default:
-    envFile = ".env.prod"
+    envFile = ".env.production"
 }
 
 config({ path: resolve("/api", envFile) })
