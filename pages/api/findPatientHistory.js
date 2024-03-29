@@ -33,7 +33,6 @@ export default async function handler(req, res) {
         },
       })
       res.status(200).send(patienthistory)
-      console.log("ok")
     } catch (error) {
       logError("read", "findPatientHistory.js", "searchPatientHistory", error)
       res.status(500).json({ error: "Une erreur est survenue" })
