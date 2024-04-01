@@ -15,10 +15,8 @@ export default async function handler(req, res) {
       return
     }
 
-    // Convertir la date du formulaire en objet Date
     const dateFromForm = parse(date, "yyyy-MM-dd", new Date())
 
-    // Créer les dates de début et de fin de la journée pour la comparaison
     const startOfDate = startOfDay(dateFromForm)
     const endOfDate = endOfDay(dateFromForm)
 
@@ -26,7 +24,7 @@ export default async function handler(req, res) {
       const dispos = await prisma.dispo.findMany({
         where: {
           doctorId: doctorId,
-          // Comparer la date de la base de données avec la plage de dates
+          isReserved: false,
           date: {
             gte: startOfDate,
             lte: endOfDate,

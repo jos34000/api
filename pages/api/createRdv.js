@@ -9,9 +9,8 @@ export default async function createRdv(req, res) {
     methods: ["POST"],
   })
 
-  const { token, doctorId, dispoId, motif } = req.body
-  const doctor = Number(doctorId)
-  const dispo = Number(dispoId)
+  const { token, doctor, dispoId, motif } = req.body
+
   if (req.method === "POST") {
     const patient = await prisma.patient.findUnique({
       where: {
@@ -38,7 +37,7 @@ export default async function createRdv(req, res) {
           },
           dispo: {
             connect: {
-              dispoId: dispo,
+              dispoId: dispoId,
             },
           },
           motif: motif,
@@ -48,7 +47,7 @@ export default async function createRdv(req, res) {
       // Mettre à jour le champ isReserved de la dispo associée à true
       await prisma.dispo.update({
         where: {
-          dispoId: dispo,
+          dispoId: dispoId,
         },
         data: {
           isReserved: true,
