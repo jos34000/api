@@ -1,15 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
-import NextCors from "nextjs-cors"
 import jwt from "jsonwebtoken"
 import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
-  await NextCors(req, res, {
-    origin: "*",
-    methods: ["POST"],
-  })
-
   if (req.method === "POST") {
     const { email, password } = req.body
 
