@@ -5,15 +5,13 @@
     "test": "jest",
     "dev": "next dev",
     "build": "next build",
-    "prod": "next build && next start",
     "start": "next start",
     "generate": "prisma generate",
     "format": "prisma format",
     "studio": "prisma studio --browser none",
     "migrate": "prisma migrate dev --name new-migration",
     "prisma": "dotenv -e .env.$NODE_ENV prisma generate && dotenv -e .env.$NODE_ENV prisma migrate dev --name new-migration && dotenv -e .env.$NODE_ENV prisma studio --browser none",
-    "all-prod": "concurrently \"npm run prod\" \"npm run prisma\"",
-    "all-dev": "concurrently \"npm run dev\" \"npm run prisma\""
+    "all": "concurrently \"npm run dev\" \"npm run prisma\""
   },
   "dependencies": {
     "date-fns": "^3.3.1",
