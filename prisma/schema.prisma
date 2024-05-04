@@ -12,7 +12,7 @@ datasource db {
 model Patient {
   patientId      Int              @id @default(autoincrement())
   email          String           @unique
-  password       String
+  password       String           @default("ImApatient")
   firstname      String
   lastname       String
   age            Int
@@ -80,8 +80,8 @@ model Rdv {
   doctor    Doctor   @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
   dispoId   Int
   dispo     Dispo    @relation(fields: [dispoId], references: [dispoId], onDelete: Cascade, onUpdate: Cascade)
-  motif     String
+  motif     String  @default("Consultation")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  deletedAt DateTime @default(now())
+  deletedAt DateTime?
 }

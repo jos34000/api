@@ -52,7 +52,7 @@ export default async (req, res) => {
     "19h - 20h",
   ]
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     try {
       const lastname = faker.person.lastName()
       const firstname = faker.person.firstName()
@@ -133,7 +133,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     const firstEntry = await prisma.doctor.findFirst({
       orderBy: {
         doctorId: "asc",
@@ -154,7 +154,7 @@ export default async (req, res) => {
     try {
       await prisma.dispo.create({
         data: {
-          doctorId: doctorId,
+          doctorId: 13,
           timeslot: timeslot,
           date: date,
         },
@@ -164,7 +164,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     const firstPatient = await prisma.patient.findFirst({
       orderBy: {
         patientId: "asc",
