@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import jwt from "jsonwebtoken"
 import logError from "@/logs/logError.js"
+import bcrypt from "bcryptjs"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -13,8 +14,10 @@ export default async function handler(req, res) {
           email,
         },
       })
+      const hashedMdp = bcrypt.compare(doctor.password, mdp)
+      console.log(doctor, hashedMdp)
 
-      if (!doctor || doctor.password !== mdp) {
+      if (!doctor || !hashedMdp) {
         logError("read", "connectDoctor.js", "LOGIN", res.message)
         return res.status(401).json({ success: false })
       }

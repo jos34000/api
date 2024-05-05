@@ -64,7 +64,7 @@ model Dispo {
   dispoId    Int      @id @default(autoincrement())
   doctorId   Int
   doctor     Doctor   @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
-  timeslot   String
+  timeslot   DateTime
   isReserved Boolean  @default(false)
   date       DateTime @default(now())
   createdAt  DateTime @default(now())

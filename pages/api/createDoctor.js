@@ -1,11 +1,13 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import logError from "@/logs/logError.js"
+import bcrypt from "bcryptjs"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     let { email, mdp, nom, prenom, specialite } = req.body
     const specialiteId = parseInt(specialite)
+    mdp = bcrypt.hashSync(mdp, 10)
     try {
       const doctor = await prisma.doctor.create({
         data: {

@@ -2,19 +2,20 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import jwt from "jsonwebtoken"
 import logError from "@/logs/logError.js"
+import bcrypt from "bcryptjs"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { email, password } = req.body
-
     try {
       const patient = await prisma.patient.findUnique({
         where: {
           email,
         },
       })
+      const hashedPassword = bcrypt.compareSync(password, patient.password)
 
-      if (!patient || patient.password !== password) {
+      if (!patient || !hashedPassword) {
         logError("read", "login.js", "LOGIN", res.message)
         return res.status(401).json({ success: false })
       }
