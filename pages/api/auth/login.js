@@ -13,7 +13,7 @@ export default async function handler(req, res) {
           email,
         },
       })
-      const hashedPassword = bcrypt.compareSync(password, patient.password)
+      const hashedPassword = bcrypt.compare(password, patient.password)
 
       if (!patient || !hashedPassword) {
         logError("read", "login.js", "LOGIN", res.message)

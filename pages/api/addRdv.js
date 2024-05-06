@@ -4,9 +4,8 @@ import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    let { token, patientId, date, timeslot } = req.body
+    let { token, patientId, timeslot } = req.body
     patientId = parseInt(patientId)
-    date = new Date(date).toISOString()
     try {
       const doctor = await prisma.doctor.findUnique({
         where: {
@@ -32,7 +31,6 @@ export default async function handler(req, res) {
 
       const dispo = await prisma.dispo.create({
         data: {
-          date: date,
           timeslot: timeslot,
           doctorId: doctorId,
           isReserved: true,

@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client"
-import { parse, startOfDay, endOfDay } from "date-fns"
+import { parse, startOfWeek, endOfWeek, isWeekend } from "date-fns"
 const prisma = new PrismaClient()
 import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*")
 
-  if (req.method === "GET") {
-    const { doctor, date } = req.query
-    let doctorId = Number(doctor)
+  if (req.method === "POST") {
+    let { doctorId, date } = req.body
+    doctorId = Number(doctorId)
     if (!date) {
       logError("read", "findDispo.js", "isDate", "Pas de date entrée")
       res.status(400).json({ message: "La date est requise" })
@@ -17,15 +17,15 @@ export default async function handler(req, res) {
 
     const dateFromForm = parse(date, "yyyy-MM-dd", new Date())
 
-    const startOfDate = startOfDay(dateFromForm)
-    const endOfDate = endOfDay(dateFromForm)
+    const startOfDate = startOfWeek(dateFromForm, { weekStartsOn: 1 })
+    const endOfDate = endOfWeek(dateFromForm, { weekStartsOn: 1 })
 
     try {
-      const dispos = await prisma.dispo.findMany({
+      let dispos = await prisma.dispo.findMany({
         where: {
           doctorId: doctorId,
           isReserved: false,
-          date: {
+          timeslot: {
             gte: startOfDate,
             lte: endOfDate,
           },
@@ -34,7 +34,12 @@ export default async function handler(req, res) {
           dispoId: true,
           timeslot: true,
         },
+        orderBy: {
+          timeslot: "asc",
+        },
       })
+
+      dispos = dispos.filter((dispo) => !isWeekend(new Date(dispo.date)))
 
       res.status(200).json(dispos)
     } catch (error) {

@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import NextCors from "nextjs-cors"
 import logError from "@/logs/logError.js"
+import bcrypt from "bcryptjs"
 
 export default async (req, res) => {
   await NextCors(req, res, {
@@ -10,7 +11,7 @@ export default async (req, res) => {
   })
   const cookie = req.body.cookie
   const oldMdp = req.body.oldMdp
-  const newMdp = req.body.newMdp
+  let newMdp = req.body.newMdp
 
   const oldMdpBdd = await prisma.patient.findUnique({
     where: {
@@ -21,7 +22,10 @@ export default async (req, res) => {
     },
   })
 
-  if (oldMdp !== oldMdpBdd.password) {
+  const hashedOldPassword = bcrypt.compare(oldMdp, oldMdpBdd.password)
+  newMdp = bcrypt.hashSync(newMdp, 10)
+
+  if (!hashedOldPassword) {
     logError(
       "update",
       "updatePassword.js",

@@ -38,7 +38,7 @@ export default async (req, res) => {
     "Ophtalmologue",
   ]
 
-  const timeslots = [
+  /*   const timeslots = [
     "8h - 9h",
     "9h - 10h",
     "10h - 11h",
@@ -50,9 +50,9 @@ export default async (req, res) => {
     "17h - 18h",
     "18h - 19h",
     "19h - 20h",
-  ]
+  ] */
 
-  for (let i = 0; i < 1000; i++) {
+  /*   for (let i = 0; i < 500; i++) {
     try {
       const lastname = faker.person.lastName()
       const firstname = faker.person.firstName()
@@ -84,7 +84,7 @@ export default async (req, res) => {
     } catch (error) {
       logError("create", "addEntry.js", "createAntecedents", error)
     }
-  }
+  } */
 
   for (let i = 0; i < specialites.length; i++) {
     try {
@@ -98,7 +98,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 10; i++) {
+  /*  for (let i = 0; i < 100; i++) {
     const firstEntry = await prisma.specialite.findFirst({
       orderBy: {
         specialiteId: "asc",
@@ -131,7 +131,7 @@ export default async (req, res) => {
     } catch (error) {
       logError("create", "addEntry.js", "createDoctor", error)
     }
-  }
+  } */
 
   for (let i = 0; i < 1000; i++) {
     const firstEntry = await prisma.doctor.findFirst({
@@ -149,14 +149,15 @@ export default async (req, res) => {
     const lastId = lastEntry.doctorId
 
     const doctorId = faker.number.int({ min: firstId, max: lastId })
-    const timeslot = faker.helpers.arrayElement(timeslots)
-    const date = faker.date.anytime()
+    const timeslot = faker.date.between({
+      from: "2024-03-01T00:00:00.000Z",
+      to: "2024-06-01T00:00:00.000Z",
+    })
     try {
       await prisma.dispo.create({
         data: {
-          doctorId: 13,
+          doctorId: doctorId,
           timeslot: timeslot,
-          date: date,
         },
       })
     } catch (error) {
@@ -164,7 +165,7 @@ export default async (req, res) => {
     }
   }
 
-  for (let i = 0; i < 1000; i++) {
+  /* for (let i = 0; i < 1000; i++) {
     const firstPatient = await prisma.patient.findFirst({
       orderBy: {
         patientId: "asc",
@@ -231,7 +232,7 @@ export default async (req, res) => {
     } catch (error) {
       logError("create", "addEntry.js", "createRDV", error)
     }
-  }
+  } */
 
   res.status(200).json({ message: "Données générées et insérées avec succès" })
 }
