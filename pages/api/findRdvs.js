@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         where: {
           doctorId: doctorId.doctorId,
           dispo: {
-            date: {
+            timeslot: {
               gte: today,
               lt: tomorrow,
             },

@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     try {
       const rdv = await prisma.rdv.findMany({
         where: {
-          patientID: patientId.patientId,
+          patientId: patientId.patientId,
         },
         include: {
           doctor: true,

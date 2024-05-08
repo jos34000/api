@@ -69,12 +69,13 @@ model Dispo {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   Rdv        Rdv[]
+  @@unique([doctorId, timeslot])
 }
 
 model Rdv {
   rdvId     Int      @id @default(autoincrement())
-  patientID Int
-  patient   Patient  @relation(fields: [patientID], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
+  patientId Int
+  patient   Patient  @relation(fields: [patientId], references: [patientId], onDelete: Cascade, onUpdate: Cascade)
   doctorId  Int
   doctor    Doctor   @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade, onUpdate: Cascade)
   dispoId   Int

@@ -4,10 +4,11 @@ import logError from "@/logs/logError.js"
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    let { token, patientId, timeslot } = req.body
+    let { token, patientId, timeslot, motif } = req.body
     patientId = parseInt(patientId)
+    timeslot = new Date(timeslot).toISOString()
     try {
-      const doctor = await prisma.doctor.findUnique({
+      let doctorId = await prisma.doctor.findUnique({
         where: {
           token: token,
         },
@@ -16,34 +17,27 @@ export default async function handler(req, res) {
         },
       })
 
-      const doctorId = doctor.doctorId
+      doctorId = doctorId.doctorId
 
-      const patient = await prisma.patient.findUnique({
+      let dispoId = await prisma.dispo.findUnique({
         where: {
-          patientId: patientId,
+          doctorId_timeslot: {
+            doctorId: doctorId,
+            timeslot: timeslot,
+          },
         },
         select: {
-          patientId: true,
+          dispoId: true,
         },
       })
 
-      const patientIds = patient.patientId
-
-      const dispo = await prisma.dispo.create({
-        data: {
-          timeslot: timeslot,
-          doctorId: doctorId,
-          isReserved: true,
-        },
-      })
-
-      const dispoId = dispo.dispoId
+      dispoId = dispoId.dispoId
 
       const rdv = await prisma.rdv.create({
         data: {
           patient: {
             connect: {
-              patientId: patientIds,
+              patientId: patientId,
             },
           },
 
@@ -57,6 +51,7 @@ export default async function handler(req, res) {
               doctorId: doctorId,
             },
           },
+          motif: motif,
         },
       })
 

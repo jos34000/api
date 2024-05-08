@@ -1,4 +1,14 @@
 import { PrismaClient } from "@prisma/client"
+import {
+  addMinutes,
+  setHours,
+  setMinutes,
+  setSeconds,
+  startOfWeek,
+  addDays,
+  addWeeks,
+} from "date-fns"
+
 const prisma = new PrismaClient()
 import logError from "@/logs/logError.js"
 import bcrypt from "bcryptjs"
@@ -22,6 +32,34 @@ export default async function handler(req, res) {
           },
         },
       })
+
+      const startHour = 8
+      const endHour = 19
+      const interval = 30
+      const days = 5
+      const weeks = 4 // nombre de semaines pour lesquelles créer des disponibilités
+
+      for (let w = 0; w < weeks; w++) {
+        let date = startOfWeek(addWeeks(new Date(), w), { weekStartsOn: 1 })
+
+        for (let i = 0; i < days; i++) {
+          let timeslot = setSeconds(setMinutes(setHours(date, startHour), 0), 0)
+
+          while (timeslot.getHours() < endHour) {
+            await prisma.dispo.create({
+              data: {
+                doctorId: doctor.doctorId,
+                timeslot: timeslot,
+                isReserved: false,
+              },
+            })
+
+            timeslot = addMinutes(timeslot, interval)
+          }
+
+          date = addDays(date, 1)
+        }
+      }
 
       return res.status(200).json({ success: true })
     } catch (error) {

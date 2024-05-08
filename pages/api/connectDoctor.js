@@ -15,7 +15,6 @@ export default async function handler(req, res) {
         },
       })
       const hashedMdp = bcrypt.compare(doctor.password, mdp)
-      console.log(doctor, hashedMdp)
 
       if (!doctor || !hashedMdp) {
         logError("read", "connectDoctor.js", "LOGIN", res.message)

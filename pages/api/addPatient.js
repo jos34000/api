@@ -29,15 +29,14 @@ export default async function handler(req, res) {
 
       const patientId = patient.patientId
 
-      const dispo = await prisma.dispo.create({
+      const dispo = await prisma.dispo.update({
+        where: {
+          dispoId: parseInt(timeslot),
+        },
         data: {
-          timeslot: timeslot,
-          doctorId: doctorId,
           isReserved: true,
         },
       })
-
-      const dispoId = dispo.dispoId
 
       const rdv = await prisma.rdv.create({
         data: {
@@ -49,12 +48,12 @@ export default async function handler(req, res) {
 
           dispo: {
             connect: {
-              dispoId: dispoId,
+              dispoId: parseInt(timeslot),
             },
           },
           doctor: {
             connect: {
-              doctorId: doctorId,
+              doctorId: parseInt(doctorId),
             },
           },
         },
